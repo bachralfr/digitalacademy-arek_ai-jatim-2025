@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="id" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital Academy</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body { box-sizing: border-box; }
+    .fade-in { animation: fadeIn .5s ease; }
+    @keyframes fadeIn { from {opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
+    .card-hover { transition:.3s; }
+    .card-hover:hover { transform:translateY(-4px); box-shadow:0 20px 20px -5px rgba(0,0,0,.1); }
+    .chapter-item { transition:.2s; }
+    .chapter-item:hover { background:#f8fafc; border-left:4px solid #3b82f6; }
+  </style>
+</head>
+
+<body class="h-full bg-gray-50 font-sans">
+
+<!-- SPLASH -->
+<div id="splash" class="fixed inset-0 flex items-center justify-center bg-white z-50">
+  <div class="text-center animate-pulse">
+    <h1 class="text-3xl font-bold text-blue-600">Digital Academy</h1>
+    <p class="text-gray-500 mt-2">Memuat...</p>
+  </div>
+</div>
+
+<!-- LOGIN PAGE -->
+<div id="login-page" class="hidden min-h-full flex items-center justify-center bg-gray-50">
+  <div class="bg-white p-10 rounded-xl shadow-md w-96">
+    <h1 class="text-2xl font-bold text-center mb-6">Login Digital Academy</h1>
+
+    <form id="loginForm" class="space-y-4">
+      <div>
+        <label class="block text-gray-700">NIPD</label>
+        <input id="username" type="text" maxlength="4" class="w-full border rounded px-3 py-2" required>
+      </div>
+
+      <div>
+        <label class="block text-gray-700">NISN</label>
+        <input id="password" type="text" maxlength="10" class="w-full border rounded px-3 py-2" required>
+      </div>
+
+      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition">
+        Login
+      </button>
+    </form>
+
+    <p id="login-error" class="text-red-500 text-sm mt-2 hidden">NIPD atau NISN salah!</p>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<main id="main-content" class="hidden fade-in min-h-full">
+
+<div id="subjects-page" class="page">
+  <header class="bg-white shadow-sm border-b border-gray-200">
+    <div class="max-w-4xl mx-auto px-6 py-8 text-center">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Digital Academy</h1>
+
+      <p class="text-gray-600">Selamat datang, <span id="display-name" class="font-semibold"></span></p>
+      <p class="text-gray-600">Silakan pilih mata pelajaran</p>
+    </div>
+  </header>
+
+  <div class="max-w-4xl mx-auto px-6 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <button onclick="goToChapters('Agama Islam')" class="subject-card card-hover bg-white rounded-xl p-8 shadow-md border">
+        <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center text-2xl">🕌</div>
+          <div><h3 class="text-xl font-semibold">Agama Islam</h3></div>
+        </div>
+      </button>
+
+      <button onclick="goToChapters('PPKN')" class="subject-card card-hover bg-white rounded-xl p-8 shadow-md border">
+        <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center text-2xl">🇮🇩</div>
+          <div><h3 class="text-xl font-semibold">PPKN</h3></div>
+        </div>
+      </button>
+      <button onclick="goToChapters('Sejarah')" class="subject-card card-hover bg-white rounded-xl p-8 shadow-md border">
+        <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center text-2xl">📚</div>
+          <div><h3 class="text-xl font-semibold">Sejarah</h3></div>
+        </div>
+      </button>
+
+      <button onclick="goToChapters('Bahasa Inggris')" class="subject-card card-hover bg-white rounded-xl p-8 shadow-md border">
+        <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center text-2xl">🇬🇧</div>
+          <div><h3 class="text-xl font-semibold">Bahasa Inggris</h3></div>
+        </div>
+      </button>
+
+      <button onclick="goToChapters('Bahasa Indonesia')" class="subject-card card-hover bg-white rounded-xl p-8 shadow-md border">
+        <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center text-2xl">📝</div>
+          <div><h3 class="text-xl font-semibold">Bahasa Indonesia</h3></div>
+        </div>
+      </button>
+
+      <button onclick="goToChapters('Informatika')" class="subject-card card-hover bg-white rounded-xl p-8 shadow-md border">
+        <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center text-2xl">💻</div>
+          <div><h3 class="text-xl font-semibold">Informatika</h3></div>
+        </div>
+      </button>
+
+    </div>
+  </div>
+</div>
+
+<div id="chapters-page" class="page hidden">
+  <header class="bg-white shadow-sm border-b border-gray-200">
+    <div class="max-w-4xl mx-auto px-6 py-8">
+      <button onclick="goToSubjects()" class="text-blue-600 hover:text-blue-800 mb-4">← Kembali</button>
+      <h1 class="text-3xl font-bold text-center">Daftar Bab</h1>
+      <p id="chapter-info" class="text-center text-gray-600"></p>
+    </div>
+  </header>
+
+  <div class="max-w-3xl mx-auto px-6 py-12">
+    <div class="bg-white rounded-xl shadow-md border overflow-hidden">
+      <div id="chapters-list" class="divide-y divide-gray-200"></div>
+    </div>
+  </div>
+</div>
+
+<div id="pdf-page" class="page hidden">
+  <header class="bg-white shadow-sm border-b border-gray-200 p-4">
+    <button onclick="returnToChapters()" class="text-blue-600 hover:text-blue-800">← Kembali</button>
+  </header>
+
+  <div class="w-full h-[90vh]">
+    <embed id="pdf-viewer" type="application/pdf" width="100%" height="100%">
+  </div>
+</div>
+
+</main>
+
+
+<script>
+/* SPLASH DELAY */
+setTimeout(() => {
+  document.getElementById("splash").classList.add("hidden");
+  document.getElementById("login-page").classList.remove("hidden");
+}, 1200);
+
+/* ================================
+   DATABASE SISWA (ISI NAMA DI SINI)
+==================================*/
+const studentsData = {
+  // Data Awal
+  "8255": { nisn: "0083783567", name: "ABIFAEYZA MUHAMMAD DYAURRAHMAN" },
+  "1234": { nisn: "1234567890", name: "DEVELOPER"},
+  "8263": { nisn: "0082603613", name: "ADINDA PUSPITA KARUNIASARI" },
+  "8268": { nisn: "0087014573", name: "AHMAD ELMAN NAFI GUNARTO" },
+  "8274": { nisn: "0081664765", name: "AJENG INDRAMINARTI" },
+  "8278": { nisn: "0098108616", name: "ALFARISKA RAHMATINA" },
+  "8283": { nisn: "0092831240", name: "ALMAGHVIRA RIZKY EFFENDY" },
+  "8297": { nisn: "0086078142", name: "ANNASTASYA NUR'AINI" },
+  "8303": { nisn: "3089091316", name: "ARLYNE ANINDYA ANDIK" },
+  "8309": { nisn: "0085193547", name: "AURA WULAN RAHMADANI" },
+  "8568": { nisn: "0097947088", name: "AYUDYA PUTRI RAMADANI" },
+  "8317": { nisn: "0082338777", name: "BENI RAIHAN ADRIANSYAH" },
+  "8330": { nisn: "0083565586", name: "CINTA RAHMADHANI" },
+  "8569": { nisn: "0097932049", name: "DAFFA AMRULLOH UTOMO" },
+  "8337": { nisn: "0087473008", name: "DAVIN DWI DARMA" },
+  "8345": { nisn: "0086927012", name: "DIO RASYA ADITYA" },
+  "8347": { nisn: "0098536833", name: "DITA DWI AYUDIA" },
+  "8353": { nisn: "0085604527", name: "ELISABETH SELLYNA" },
+  "8354": { nisn: "0085938244", name: "EMERALDA SEPTRIAMANDA" },
+  "8368": { nisn: "0081212791", name: "FEYOLA VALENCIA UTOMO" },
+  "8396": { nisn: "0094552183", name: "KHANZA CALLISTA AL AZMI" },
+  "8401": { nisn: "3085284178", name: "LAILI MAGHFIROH" },
+  "8408": { nisn: "0083848329", name: "M. DIMAS ZULHAM ALI BASYA" },
+  "8421": { nisn: "0081059157", name: "Meisya Nurul Isnaini" },
+  "8441": { nisn: "3085337998", name: "MUHAMMAD ARRAFI" },
+  "8446": { nisn: "0092552069", name: "MUHAMMAD FAIZAL ABDILLAH SHIDDIQ" },
+  "8447": { nisn: "0088147148", name: "MUHAMMAD FATHIR AFZA ANWAR" },
+  "8457": { nisn: "0095275794", name: "MUHAMMAD RIZQI ADITIA" },
+  "8459": { nisn: "0084650125", name: "MUHAMMAD SEPTIAN FALAH RAMADHAN" },
+  "8478": { nisn: "0094303895", name: "NAYLA IQLIMATUL KHAMIDA" },
+  "8479": { nisn: "0094276543", name: "NAYLA RASYA MAHIRA" },
+  "8494": { nisn: "0093031300", name: "OKTAN RESKI ADITYA" },
+  "8498": { nisn: "0086049794", name: "PUTRI KUMALASARI" },
+  "8500": { nisn: "0095509299", name: "QAIDA MAHESWARI ANINDYA HIDAYAT" },
+  "8539": { nisn: "3085190248", name: "SYAHRINDRA ILHAM" },
+  "8577": { nisn: "0092915699", name: "ZULAIKHA ILMIRA" },
+  "8262": { nisn: "0085058565", name: "ADINDA LAILATUZ ZUHRO" },
+  "8267": { nisn: "3095621925", name: "AHMAD DAFFA WIJOYO" },
+  "8290": { nisn: "0086466737", name: "ANANTA PRATAMA" },
+  "8293": { nisn: "0094937433", name: "ANGGI AMELIA" },
+  "8299": { nisn: "3087926924", name: "AQILAH ATHALLAZAHRA ARDINE" },
+  "8305": { nisn: "0094269325", name: "ATHAILLAH AILSA JACINDA" },
+  "8307": { nisn: "0085175799", name: "AULIA PUTRI ARIYANTI" },
+  "8308": { nisn: "3097331990", name: "AURA SINTA MARGARETA" },
+  "8313": { nisn: "0077439775", name: "AZIZ AHMAD MUDHAKAR" },
+  "8326": { nisn: "0097774703", name: "CHALLYSTA ZABANIYAH HOSHI SUSISCO" },
+  "8346": { nisn: "0084823408", name: "DIRGAHAYU RISKA RAMADANI" },
+  "8348": { nisn: "0081953462", name: "DONI DWI HANDIKA" },
+  "8358": { nisn: "0088009189", name: "FA'IQAH LAILAMAYYASAH" },
+  "8367": { nisn: "0084406001", name: "FERA ANGGRAINI" },
+  "8386": { nisn: "0084343836", name: "JONATHAN ARFIKO KURNIAWAN" },
+  "8387": { nisn: "0096936303", name: "Joseph Kenzie Surya Wijaya" },
+  "8402": { nisn: "0082045514", name: "LAILY SADHINA EZRA PRATAMA" },
+  "8434": { nisn: "0092562794", name: "MUHAMAD FAHRI ARIFFULLOH" },
+  "8454": { nisn: "3082775960", name: "MUHAMMAD RAFI SYAWALUDIN" },
+  "8461": { nisn: "0081294718", name: "Muhammad Syauqil Jinan" },
+  "8467": { nisn: "0099431420", name: "Nadia Imro'atul Mufida" },
+  "8473": { nisn: "3091972565", name: "NARARYA DEVIA NALINI" },
+  "8474": { nisn: "0095333641", name: "NASWA LAILY QUTROTUL AINI" },
+  "8476": { nisn: "0086900584", name: "NAVISYA AURA MADA" },
+  "8480": { nisn: "0088192434", name: "NAZILA AZWA SAVIRA" },
+  "8483": { nisn: "0098832918", name: "NESSA ACHDIA MAGDALENA TUNGGADEWI" },
+  "8490": { nisn: "0099072484", name: "Nur Aini" },
+  "8573": { nisn: "0082916573", name: "OCTAVIAN AMRULLAH" },
+  "8509": { nisn: "0081917994", name: "RASYA ISLAMI HEPPY PRATAMA" },
+  "8511": { nisn: "0092684506", name: "REHAN ARYA PRATAMA" },
+  "8519": { nisn: "0088558121", name: "RIFQI ATHALLAH SYAH" },
+  "8524": { nisn: "0089515064", name: "RIZKI ANDI ABDILLAH" },
+  "8528": { nisn: "0092524110", name: "SAFIRA ELINA PUTRI" },
+  "8548": { nisn: "0094487050", name: "VANIA EKA AMANDA PUTRI" },
+  "8551": { nisn: "0097637463", name: "VONNY INDRIYANTI" },
+  "8553": { nisn: "0089121539", name: "WHISNU ADI PRASETYO" },
+  "8254": { nisn: "0088846215", name: "ABDULLOH MUKHYI" },
+  "8564": { nisn: "0082801977", name: "Abigail Adine Gandes Sambarana" },
+  "8271": { nisn: "0087597958", name: "Aisyah Octavia Aulia" },
+  "8272": { nisn: "0086225559", name: "AISYAH SINTA DEWI SYAFITRI" },
+  "8566": { nisn: "0088428482", name: "ALDO VANTINALDO" },
+  "8294": { nisn: "0093021245", name: "ANGGUN MEILIA" },
+  "8295": { nisn: "0062286318", name: "ANGGUN SEPTIAN NINGRUM" },
+  "8298": { nisn: "3082202765", name: "APRIAN ISNA FITRADAYUNAN" },
+  "8300": { nisn: "0092470654", name: "ARINA KHOIRUN NISA'" },
+  "8304": { nisn: "0081284674", name: "ARYA BIMA RADIANSYAH" },
+  "8310": { nisn: "0096715797", name: "AURELIA CALLISTA ANGGRAINI" },
+  "8350": { nisn: "3086205752", name: "DZIKRI ALIF BACHTIAR" },
+  "8352": { nisn: "0088694571", name: "ELFITRI SUGI PRIHATI" },
+  "8355": { nisn: "3097557233", name: "EVA HAUNA KURNIAWATI" },
+  "8382": { nisn: "3087982083", name: "IZKA LAILA KHOMSA NISA'UL ARIFI" },
+  "8389": { nisn: "0099640057", name: "KAISYA MUAMMAR" },
+  "8399": { nisn: "0097712693", name: "LAILA ARTA DEWI" },
+  "8400": { nisn: "0082213770", name: "LAILATUL MAGHFIROH HAYATI" },
+  "8425": { nisn: "0084017777", name: "MITA RINDIANI ASTARI" },
+  "8427": { nisn: "0087609744", name: "MOCHAMAD TITO PRASETYO" },
+  "8431": { nisn: "0089777336", name: "MOCHAMMAD RAJWA SURYA SASTRO SAPUTRA" },
+  "8450": { nisn: "0083543923", name: "MUHAMMAD HENDRIK.A.P" },
+  "8451": { nisn: "0081270024", name: "MUHAMMAD ILHAM FIRMANSYAH" },
+  "8452": { nisn: "3086649848", name: "MUHAMMAD IRFAN" },
+  "8455": { nisn: "0094250721", name: "MUHAMMAD RAGAN ENGGRIYANG" },
+  "8458": { nisn: "3098747448", name: "Muhammad Satria Maulana" },
+  "8463": { nisn: "3088826806", name: "MUKHAMMAD FAHRUL RISKIANTO" },
+  "8468": { nisn: "0083038333", name: "NADIN HERLITA FRIDIANA" },
+  "8470": { nisn: "3090439435", name: "NADIVA QOLBY RIANDYSA" },
+  "8471": { nisn: "0091696252", name: "NAJWA ANINDYA BILQIS RIZKIYUDIN" },
+  "8475": { nisn: "0081604308", name: "Nathaniela Raihanah Setyawan" },
+  "8484": { nisn: "0088773352", name: "NEYSA RIYQY RAHMA DANI" },
+  "8533": { nisn: "0091721598", name: "SANASTASIA KINANTI" },
+  "8542": { nisn: "0099052833", name: "TAZKIA VELITA ISTIQFARA" },
+  "8549": { nisn: "0088507259", name: "VANIA IKA NUR FATIMAH" },
+  "8555": { nisn: "0092482083", name: "WISNU PRITAMA" },
+  "8258": { nisn: "0089321293", name: "Achmad Fauzan Dwi Ghazalah" },
+  "8273": { nisn: "0099761011", name: "AISYAH ZAHIRA" },
+  "8287": { nisn: "0089969714", name: "AMILIA WAHONO" },
+  "8288": { nisn: "0095160753", name: "AMIRA MAGHFIROH FIRDAUZA" },
+  "8296": { nisn: "0091446906", name: "ANISAH PRATIWI" },
+  "8301": { nisn: "0083896453", name: "ARKA DAEGAL ATMA JAYA" },
+  "8315": { nisn: "0098035212", name: "BACHRALFRIDHO REYSHADIN ILMAN" },
+  "8319": { nisn: "0089210220", name: "BIANCHA VALENCIA ARIFIZANTY.P" },
+  "8323": { nisn: "3086524253", name: "CADEREYN ARETA" },
+  "8324": { nisn: "0099608183", name: "CANTIKA LAILI NAFISA SYABELA" },
+  "8329": { nisn: "0085887400", name: "Cindy Permata Adelia Sukamto" },
+  "8357": { nisn: "0151585020", name: "Fahmida Hapsari Razzaqee" },
+  "8359": { nisn: "0097694170", name: "FAIRA RIZKA ELYSIA" },
+  "8365": { nisn: "0082585783", name: "FAWWAZKA FALAJ WAHANDY" },
+  "8373": { nisn: "3087548777", name: "GALIH AJI SETIAWAN" },
+  "8377": { nisn: "0081483155", name: "HARDHIKA YUDHA KAVIN PRATAMA" },
+  "8394": { nisn: "0085731144", name: "KEZIA NATALIE WIBOWO" },
+  "8403": { nisn: "0092235893", name: "LELI AVRILIA" },
+  "8405": { nisn: "3094321500", name: "LUNA ALMAURA" },
+  "8407": { nisn: "0093374649", name: "M. ABYAZ MAULIDI AL BALAWI" },
+  "8412": { nisn: "0095282580", name: "MAHENDRA VIJAYA SUGIARTO" },
+  "8436": { nisn: "0087864975", name: "MUHAMMAD AKBAR SINATRIYA" },
+  "8438": { nisn: "3089454092", name: "MUHAMMAD ALBI SYARIF" },
+  "8449": { nisn: "0092512972", name: "MUHAMMAD HAIKAL HAMZAH" },
+  "8460": { nisn: "0084504702", name: "MUHAMMAD SULTON ARIF MAULANA" },
+  "8464": { nisn: "0084269423", name: "MUKHAMMAD RIZQI YAHYA" },
+  "8469": { nisn: "0096179464", name: "NADIN MAYSAM" },
+  "8491": { nisn: "0091970541", name: "NUR FADILAH" },
+  "8497": { nisn: "0093507495", name: "PUTRI AYU MARDIYAH" },
+  "8504": { nisn: "0088469351", name: "RAFI SAPUTRA" },
+  "8529": { nisn: "0085347227", name: "SAFIYANA YUSRIYA" },
+  "8531": { nisn: "0093418520", name: "SALWA KAYLA PUTRI" },
+  "8532": { nisn: "0099603762", name: "SAMARA PUTRI ZULKIFLI" },
+  "8575": { nisn: "0088051985", name: "SOFI MAULIDAH" },
+  "8543": { nisn: "0085501551", name: "TEGAR ARFIANTO" },
+  "8556": { nisn: "0082616569", name: "Yasmin Ayu Fairuniza" },
+  "8264": { nisn: "0087848186", name: "ADNAN VINZA RUVIANTO" },
+  "8265": { nisn: "0096301960", name: "AFDIAN RASYA NAUFAL" },
+  "8266": { nisn: "0088460595", name: "AHMAD AZRIL IBRAHIM" },
+  "8284": { nisn: "0081459902", name: "ALVIRA VAIRA VANENINA" },
+  "8289": { nisn: "0085081681", name: "ANA FITRIATUL WAKHIDAH" },
+  "8292": { nisn: "0099808334", name: "ANGGA RIZKY PUTRA SETIAWAN" },
+  "8302": { nisn: "0088010742", name: "ARLETHA PUTRI LESTARI" },
+  "8312": { nisn: "0084688961", name: "AZINDA LINTANG ANA AZ-ZAHRA" },
+  "8314": { nisn: "3091429397", name: "AZLAN RIZQI FEBRIANSYAH" },
+  "8318": { nisn: "0084470112", name: "BERNAD JALU JUNIOR" },
+  "8327": { nisn: "0081576245", name: "CHAREN VERONICA KUSUMA" },
+  "8332": { nisn: "3099703926", name: "CITRA SOFIA RAMADANI" },
+  "8339": { nisn: "0098452931", name: "DEFI EKA MAULITA" },
+  "8341": { nisn: "0086704641", name: "DEVANDIO RIDHO AL KHAFIDZ" },
+  "8361": { nisn: "3088802569", name: "FAKHRY DWI JULIANMA" },
+  "8369": { nisn: "0086186067", name: "FINDI EKA RISMAWATI" },
+  "8374": { nisn: "0091638796", name: "GALUH AVRIL DINDA ZASKIA" },
+  "8570": { nisn: "0082726354", name: "IBRANI CALFIN MARBUN" },
+  "8378": { nisn: "0087502751", name: "IFTITA ITSNAINA AZZAHRA" },
+  "8392": { nisn: "0084695270", name: "KEYLA DINAR ANANTA" },
+  "8395": { nisn: "0012647585", name: "KHAMZAH RAFIQI" },
+  "8404": { nisn: "0099489989", name: "Livina Maria Ashrael" },
+  "8411": { nisn: "0081941795", name: "Mafaza Risky Salsabila Putri" },
+  "8413": { nisn: "0085357270", name: "MALVINO CHOLVI JOVANTAMA" },
+  "8416": { nisn: "3086929227", name: "MARINDA AISYAH MAWLAAYA IRBAH" },
+  "8440": { nisn: "0085588018", name: "MUHAMMAD ALFIN DWI FIRMANSYAH" },
+  "8578": { nisn: "0084060630", name: "NAURAH YUDITA RAMADHANTI WIBOWO" },
+  "8501": { nisn: "0093286339", name: "RACHELANANTA NOR KHAFIDHO" },
+  "8514": { nisn: "0093321531", name: "RETA AULIA SALSABILA" },
+  "8515": { nisn: "0081154335", name: "REVALINA TIARA DEVI" },
+  "8518": { nisn: "0081298122", name: "RIEKE RIZMA MAGDALENA" },
+  "8521": { nisn: "0073824935", name: "RIVALDO RAMA COKI ANDRIANTO" },
+  "8540": { nisn: "0088682677", name: "Syifa Fauziyah" },
+  "8547": { nisn: "0087719739", name: "UMARO ZUNIA RAMADHANI" },
+  "8557": { nisn: "3083949437", name: "YASMIN KHOTFI ROSIDA MUKTI" },
+  "8559": { nisn: "3083123860", name: "YOSSI AMRU AT-TAUFIK" },
+  "8260": { nisn: "0098406507", name: "ADELFIO FADDEI AZHALLAH" },
+  "8580": { nisn: "0086079551", name: "ADITYA RACHMA PAMUNGKAS" },
+  "8270": { nisn: "0095182632", name: "Ahmad Rijal Al Afif" },
+  "8280": { nisn: "3095793254", name: "ALFI AULYA SUA AGUSTIN" },
+  "8320": { nisn: "0081196921", name: "BILLY WIRA PRAPTA" },
+  "8322": { nisn: "0093805069", name: "BUSRO LANA A'ZAM" },
+  "8335": { nisn: "0084312733", name: "DANIS RAYHAN NUR ABIDIN" },
+  "8338": { nisn: "0082774116", name: "DEA KAHAYA AISHAWA" },
+  "8343": { nisn: "0056555843", name: "DIANA DWI AZZAHRA" },
+  "8356": { nisn: "3095329280", name: "FADIA RIZKIANA SAFIRA" },
+  "8362": { nisn: "0081686971", name: "FARAH AULIA ZAHRA" },
+  "8364": { nisn: "0081738087", name: "FAUZIYYAH RAHMATUL AMALIA PUTRI" },
+  "8366": { nisn: "3091509573", name: "FAZA AURELLIA HASAN" },
+  "8379": { nisn: "0097317826", name: "IMELDA KHARISMA PUTRI" },
+  "8380": { nisn: "0087378723", name: "ISHA HABIBILLAH" },
+  "8383": { nisn: "0091336779", name: "JASMINE PUTRI ALMEERA" },
+  "8391": { nisn: "3083579115", name: "KARNEISHA ARSENAL WIBOWO" },
+  "8393": { nisn: "0099039203", name: "KEZIA CIQUITA NAIRA" },
+  "8417": { nisn: "0158780443", name: "MAULANA RADITIYA SAPUTRA" },
+  "8429": { nisn: "0083100683", name: "MOCHAMMAD IBNU AHLUL A'FA" },
+  "8432": { nisn: "0082454895", name: "MOH ANDRA PRASETYO" },
+  "8437": { nisn: "0096903842", name: "Muhammad Akmal Munir" },
+  "8572": { nisn: "0099578333", name: "MUHAMMAD MUJIB HABIBI" },
+  "8472": { nisn: "0086103805", name: "NAJWA YAQUTA BAHMID" },
+  "8482": { nisn: "3091650897", name: "NESHIA AMELIA PUTRI" },
+  "8492": { nisn: "3090991475", name: "NUR KHALILAH JABIRAH" },
+  "8495": { nisn: "0096016521", name: "ORBAR HASBILASYEH" },
+  "8510": { nisn: "0089744889", name: "RAYDA SALSABILA" },
+  "8512": { nisn: "0099259419", name: "REHANA ZEMMA ALDINIA VERARI" },
+  "8513": { nisn: "0089416926", name: "REIVALDIANO BINTANG MAHARDIKA" },
+  "8541": { nisn: "3096612306", name: "TALITA DWI KHUMAIRA" },
+  "8545": { nisn: "0085760326", name: "TITAH NUNINGSIH MAYUN MAHA DEWI" },
+  "8546": { nisn: "0098619067", name: "TYYA MARGARETA ASRIL" },
+  "8550": { nisn: "0081537936", name: "VIRSA NUR FITRIA" },
+  "8552": { nisn: "0082100787", name: "WANDA DWI RAHAYU AGUSTIN" },
+  "8576": { nisn: "0099645275", name: "ZASKIA FAIDA AZMI" },
+  "8282": { nisn: "3086136578", name: "ALIF SETIAWAN" },
+  "8567": { nisn: "0092861721", name: "ANGELINA SANJAYA" },
+  "8311": { nisn: "0088649549", name: "AVIF ZUDIS ARDIANSYAH" },
+  "8325": { nisn: "0083322221", name: "CATRIN AYU MAHESYA" },
+  "8333": { nisn: "0081439536", name: "CLARISYA AFRILITA PUTRI" },
+  "8334": { nisn: "3092551794", name: "DAHANA SAIKATZU ALBARIZY" },
+  "8340": { nisn: "3088814248", name: "DESFITA CAHYA ARINI" },
+  "8565": { nisn: "0087176899", name: "DEVRILYA PUTRI RAMADHANI" },
+  "8363": { nisn: "0084915012", name: "Farel Ardinata Mislanda Putra" },
+  "8371": { nisn: "0082906090", name: "FIRDA LIBYANA" },
+  "8375": { nisn: "0086236528", name: "GITA NUR AINI" },
+  "8388": { nisn: "3109538848", name: "Jovalin Azmi Adinnata" },
+  "8406": { nisn: "3087864747", name: "M. AHNAF RAMADHANI" },
+  "8414": { nisn: "0086654109", name: "MANITA ARDIANSYAH RAHMA" },
+  "8418": { nisn: "3080781902", name: "MAWADDAH FATIMATUZZAHRA" },
+  "8420": { nisn: "3086972220", name: "MEI SHELLA YOLANDA PUTRI" },
+  "8430": { nisn: "0098949770", name: "mochammad marvin luckiansyah wardany" },
+  "8433": { nisn: "0084516249", name: "MOHAMMAD ADAM RAYLIANSYAH" },
+  "8439": { nisn: "3094462883", name: "MUHAMMAD ALDO RIZQIANSYAH" },
+  "8442": { nisn: "0092949853", name: "MUHAMMAD ASHRAF PUTRA RAHMANI" },
+  "8571": { nisn: "3092037254", name: "Muhammad Izzulil Haq" },
+  "8485": { nisn: "0097303103", name: "NIKMA FATIHAH OCEAN HANANI" },
+  "8487": { nisn: "0094550611", name: "NIROH NUR AL FINA" },
+  "8496": { nisn: "0086492378", name: "PUTRI ARFELI PRIBADI" },
+  "8503": { nisn: "0086704099", name: "RAFAEL AURELIO WIDYA PUTRA" },
+  "8507": { nisn: "0087562029", name: "RAHMAT ADI PRASETYO" },
+  "8508": { nisn: "0094649184", name: "RANI DWI ARIYANTI" },
+  "8520": { nisn: "0092860171", name: "RIRID DYAH PURWANING RAHMATUL" },
+  "8522": { nisn: "0097771298", name: "RIZA AKBAR ALMUQSITH" },
+  "8525": { nisn: "3082758639", name: "ROCHMATUL MAGHFIROH" },
+  "8527": { nisn: "0092701129", name: "SAFIRA AFRYA NESA" },
+  "8534": { nisn: "0097775783", name: "SEVILLA MAHARANI" },
+  "8537": { nisn: "3099276912", name: "SITI KHUMAYROH" },
+  "8554": { nisn: "0086656081", name: "WINDYA POPY PRATIWI" },
+  "8561": { nisn: "0084772700", name: "ZAHRATU SYIFA'" },
+  "8256": { nisn: "3088419851", name: "ABILLA NUR ALFANDANI" },
+  "8285": { nisn: "3088273625", name: "ALWI SHOLAKHUDIN ASY'ARI" },
+  "8316": { nisn: "0096806567", name: "Bagas Prawira Bimantara" },
+  "8321": { nisn: "0095576463", name: "Bilqistosy Calista Quyirnafa" },
+  "8336": { nisn: "0093408141", name: "DAVIDA DWI PRATIWI" },
+  "8344": { nisn: "0082872876", name: "DINDA ARIFAH" },
+  "8351": { nisn: "0081341984", name: "EKA LENI OKTAVIANA" },
+  "8370": { nisn: "0084505916", name: "FIOLA RAMADHANIE SHINDU" },
+  "8385": { nisn: "0091970362", name: "JINGGA PRAMESTI ISWAHONO" },
+  "8398": { nisn: "0083195395", name: "KIRANI DZIL IZZATI" },
+  "8410": { nisn: "3082093349", name: "M. VINO ARDIANSYAH" },
+  "8415": { nisn: "0084309878", name: "MARIA VIDYA KHANDIS" },
+  "8424": { nisn: "0082999407", name: "Mita Aulia" },
+  "8426": { nisn: "3097271004", name: "MOCHAMAD NURIL MAHMUDI AL TAZAM BILLAH" },
+  "8428": { nisn: "0096868356", name: "MOCHAMMAD AMMAR IZZUDIN WAFIQ" },
+  "8435": { nisn: "0088404869", name: "MUHAMAD SYIAM SEPTIAN SYAH" },
+  "8443": { nisn: "3080832474", name: "MUHAMMAD ATHALLAH" },
+  "8445": { nisn: "3095256433", name: "MUHAMMAD FAHRI AZHAR" },
+  "8448": { nisn: "0094768617", name: "MUHAMMAD HADID ROHMATULLAH" },
+  "8462": { nisn: "0098353271", name: "MUHAMMAD WAHYU AL AKBAR" },
+  "8486": { nisn: "0077355247", name: "NILA AMALIA NABILA" },
+  "8488": { nisn: "0084602006", name: "NOVIA MAYSAROH" },
+  "8489": { nisn: "0089312911", name: "NOVITA DAMAYANTI" },
+  "8493": { nisn: "0088594053", name: "NURUS SA'IIDATUL HAQIQI" },
+  "8505": { nisn: "0094960648", name: "RAHARDIAN PUTRA RAYA ALBANI" },
+  "8574": { nisn: "3097617897", name: "RAHMA INDITIYA" },
+  "8517": { nisn: "0094667513", name: "REZA TANGGUH SAGARA" },
+  "8526": { nisn: "0087036409", name: "ROSITA DEWI" },
+  "8530": { nisn: "0094277887", name: "SALSA BIEANKA FEBITAMA" },
+  "8538": { nisn: "0098263929", name: "SYABILA AULIA AZ-ZAHRA" },
+  "8558": { nisn: "0089577331", name: "YOEL PURNOMO" },
+  "8560": { nisn: "3085822975", name: "Zahra Sabrina Putri Arianto" },
+  "8562": { nisn: "3089907474", name: "ZALFA NAIDIA NATASYA" },
+  "8563": { nisn: "0081441048", name: "ZIANCA ZUBIZZARETA" },
+  "8257": { nisn: "0091728583", name: "Abiyyu Naufal Zaky Asnar" },
+  "8259": { nisn: "0081556533", name: "ADE RIZKY NUR FADLILLAH" },
+  "8261": { nisn: "0085694736", name: "ADIKA GHANI NURRIZKY" },
+  "8269": { nisn: "0098290786", name: "AHMAD NURIL QOLBI" },
+  "8276": { nisn: "0099628398", name: "ALDINO PUTRA ADI NUGRAHA" },
+  "8277": { nisn: "0086019241", name: "ALFA SALMA FARIKHA" },
+  "8286": { nisn: "0084064791", name: "ALYSIA DELLA MURFAHANIK FAIZ" },
+  "8291": { nisn: "3080844384", name: "ANDRA EGIDIA RAHMADANI" },
+  "8306": { nisn: "0084143467", name: "AULIA NURAZIZAH" },
+  "8581": { nisn: "0081834841", name: "BETA KHOIROTUL UMMAH" },
+  "8328": { nisn: "0089472889", name: "CHELSI DWI CAHYA KIRANI" },
+  "8331": { nisn: "0098032889", name: "CINTYA ALIN PRAMUDITA" },
+  "8342": { nisn: "0094067351", name: "DEVIKA ARDA SALSABERA" },
+  "8360": { nisn: "0087837087", name: "Faishal Ali Reza" },
+  "8376": { nisn: "0095033095", name: "HAFIZH ABBAS KURNIAWAN" },
+  "8381": { nisn: "0086585650", name: "ISLAUKHA NUZRILIA" },
+  "8384": { nisn: "0097057271", name: "JESICA ANASTASYA HARDININGRUM" },
+  "8390": { nisn: "3083691217", name: "Kamila Naja" },
+  "8397": { nisn: "3093221026", name: "KHOFI ZAKIYYAN ATHO'ULLOH" },
+  "8409": { nisn: "0086805603", name: "M. NAUFAL ARDIANSYAH" },
+  "8419": { nisn: "0082422582", name: "Mayra Amelia Putri Santoso" },
+  "8422": { nisn: "0097829258", name: "MEY NENSY ZALIATY" },
+  "8423": { nisn: "0081968203", name: "MIFTAKUR ROHMA FITRIANSYAH" },
+  "8444": { nisn: "0096463308", name: "MUHAMMAD KIPLI AR RASYID" },
+  "8456": { nisn: "3092913995", name: "MUHAMMAD RIFKY ARIFUDIN" },
+  "8465": { nisn: "0095435320", name: "MUTIARA CALLISTA ANINDYA" },
+  "8466": { nisn: "3080933221", name: "NABILA AYU SALMA" },
+  "8477": { nisn: "3093228611", name: "NAYAKA MAULANA AZKA SYARIF" },
+  "8481": { nisn: "0086841785", name: "NELY ENJELITA" },
+  "8499": { nisn: "0089558247", name: "PUTRINADIAN ANDINISARI PURNAMA" },
+  "8502": { nisn: "0089352499", name: "RAFAEL ANGGORO" },
+  "8506": { nisn: "0083926780", name: "Rahmania Ahmad Safiradewi" },
+  "8516": { nisn: "3097957493", name: "REVANO ARDIANSA PUTRA RAMADANI" },
+  "8523": { nisn: "0085231956", name: "RIZAL AZAM MUZAKI" },
+  "8536": { nisn: "0092618739", name: "SISCA ZAHROTUL JANNAH" },
+  "8544": { nisn: "0085605914", name: "TIARA VIONA VIRDAUS" }
+};
+
+/* LOGIN */
+document.getElementById("loginForm").addEventListener("submit", function(e){
+  e.preventDefault();
+
+  const nipd = document.getElementById("username").value.trim();
+  const nisn = document.getElementById("password").value.trim();
+
+  if (studentsData[nipd] && studentsData[nipd].nisn === nisn) {
+
+    document.getElementById("display-name").textContent = studentsData[nipd].name;
+
+    document.getElementById("login-page").classList.add("hidden");
+    document.getElementById("main-content").classList.remove("hidden");
+
+  } else {
+    document.getElementById("login-error").classList.remove("hidden");
+  }
+});
+
+/* ===========================================
+   CHAPTER LIST + PDF SYSTEM  
+=========================================== */
+let currentSubject = "";
+
+const chaptersData = {
+  "Agama Islam": [
+    { title: "BAB 1", file: "https://bachralfr.github.io/digitalachademysmanema1b/Islam-BG-KLS-XI-pages-2.pdf" },
+    { title: "BAB 2", file: "https://bachralfr.github.io/digitalachademysmanema1b/Islam-BG-KLS-XI-pages-3.pdf" },
+    { title: "BAB 3", file: "https://bachralfr.github.io/digitalachademysmanema1b/Islam-BG-KLS-XI-pages-4.pdf" },
+    { title: "BAB 4", file: "https://bachralfr.github.io/digitalachademysmanema1b/Islam-BG-KLS-XI-pages-5.pdf" },
+    { title: "BAB 5", file: "https://bachralfr.github.io/digitalachademysmanema1b/Islam-BG-KLS-XI-pages-6.pdf" },
+    { title: "BAB 6", file: "https://bachralfr.github.io/digitalachademysmanema1b/Islam-BG-KLS-XI-pages-7.pdf" },
+    { title: "BAB 7", file: "https://bachralfr.github.io/digitalachademysmanema1b/Islam-BG-KLS-XI-pages-8.pdf" },
+    { title: "BAB 8", file: "https://bachralfr.github.io/digitalachademysmanema1b/Islam-BG-KLS-XI-pages-9.pdf" },
+    { title: "BAB 9", file: "https://bachralfr.github.io/digitalachademysmanema1b/Islam-BG-KLS-XI-pages-10.pdf" }
+  ],
+  "Sejarah": [
+    { title: "BAB 1", file: "https://bachralfr.github.io/digitalachademysmanema1b/Sejarah-BS-KLS-XI-pages-2.pdf" },
+    { title: "BAB 2", file: "https://bachralfr.github.io/digitalachademysmanema1b/Sejarah-BS-KLS-XI-pages-3.pdf" },
+    { title: "BAB 3", file: "https://bachralfr.github.io/digitalachademysmanema1b/Sejarah-BS-KLS-XI-pages-4.pdf" },
+    { title: "BAB 4", file: "https://bachralfr.github.io/digitalachademysmanema1b/Sejarah-BS-KLS-XI-pages-5.pdf" }
+  ],
+  "Bahasa Inggris": [
+    { title: "BAB 1", file: "https://bachralfr.github.io/digitalachademysmanema1b/Bahasa-Inggris-BS-KLS-X-pages-2.pdf" },
+    { title: "BAB 2", file: "https://bachralfr.github.io/digitalachademysmanema1b/Bahasa-Inggris-BS-KLS-X-pages-3.pdf" },
+    { title: "BAB 3", file: "https://bachralfr.github.io/digitalachademysmanema1b/Bahasa-Inggris-BS-KLS-X-pages-4.pdf" },
+    { title: "BAB 4", file: "https://bachralfr.github.io/digitalachademysmanema1b/Bahasa-Inggris-BS-KLS-X-pages-5.pdf" },
+    { title: "BAB 5", file: "https://bachralfr.github.io/digitalachademysmanema1b/Bahasa-Inggris-BS-KLS-X-pages-6.pdf" },
+    { title: "BAB 6", file: "https://bachralfr.github.io/digitalachademysmanema1b/Bahasa-Inggris-BS-KLS-X-pages-7.pdf" }
+  ],
+  "Bahasa Indonesia": [
+    { title: "BAB 1", file: "https://bachralfr.github.io/digitalachademysmanema1b/Bahasa-Indonesia-BS-KLS-XI-halaman-2.pdf" },
+    { title: "BAB 2", file: "https://bachralfr.github.io/digitalachademysmanema1b/Bahasa-Indonesia-BS-KLS-XI-halaman-3.pdf" },
+    { title: "BAB 3", file: "https://bachralfr.github.io/digitalachademysmanema1b/Bahasa-Indonesia-BS-KLS-XI-halaman-4.pdf" },
+    { title: "BAB 4", file: "https://bachralfr.github.io/digitalachademysmanema1b/Bahasa-Indonesia-BS-KLS-XI-halaman-5.pdf" },
+    { title: "BAB 5", file: "https://bachralfr.github.io/digitalachademysmanema1b/Bahasa-Indonesia-BS-KLS-XI-halaman-6.pdf" },
+    { title: "BAB 6", file: "https://bachralfr.github.io/digitalachademysmanema1b/Bahasa-Indonesia-BS-KLS-XI-halaman-7.pdf" }
+  ],
+  "Informatika": [
+    { title: "BAB 1", file: "https://bachralfr.github.io/digitalachademysmanema1b/Informatika-BS-KLS-XI-halaman-2.pdf" },
+    { title: "BAB 2", file: "https://bachralfr.github.io/digitalachademysmanema1b/Informatika-BS-KLS-XI-halaman-3.pdf" },
+    { title: "BAB 3", file: "https://bachralfr.github.io/digitalachademysmanema1b/Informatika-BS-KLS-XI-halaman-4.pdf" },
+    { title: "BAB 4", file: "https://bachralfr.github.io/digitalachademysmanema1b/Informatika-BS-KLS-XI-halaman-5.pdf" },
+    { title: "BAB 5", file: "https://bachralfr.github.io/digitalachademysmanema1b/Informatika-BS-KLS-XI-halaman-6.pdf" },
+    { title: "BAB 6", file: "https://bachralfr.github.io/digitalachademysmanema1b/Informatika-BS-KLS-XI-halaman-7.pdf" }
+  ],
+  "PPKN": [
+    { title: "BAB 1", file: "https://bachralfr.github.io/digitalachademysmanema1b/PPKN-BS-KLS-XI-halaman-2.pdf" },
+    { title: "BAB 2", file: "https://bachralfr.github.io/digitalachademysmanema1b/PPKN-BS-KLS-XI-halaman-3.pdf" },
+    { title: "BAB 3", file: "https://bachralfr.github.io/digitalachademysmanema1b/PPKN-BS-KLS-XI-halaman-4.pdf" },
+    { title: "BAB 4", file: "https://bachralfr.github.io/digitalachademysmanema1b/PPKN-BS-KLS-XI-halaman-5.pdf" }
+  ]
+};
+
+function goToChapters(subject) {
+  currentSubject = subject;
+
+  document.getElementById("subjects-page").classList.add("hidden");
+  document.getElementById("chapters-page").classList.remove("hidden");
+
+  document.getElementById("chapter-info").textContent = subject;
+
+  const list = document.getElementById("chapters-list");
+  list.innerHTML = "";
+
+  chaptersData[subject].forEach((ch, i) => {
+    list.innerHTML += `
+      <div class="p-4 chapter-item cursor-pointer" onclick="openPDF('${ch.file}')">
+        ${ch.title}
+      </div>
+    `;
+  });
+}
+
+function openPDF(link) {
+  document.getElementById("chapters-page").classList.add("hidden");
+  document.getElementById("pdf-page").classList.remove("hidden");
+  document.getElementById("pdf-viewer").src = link;
+}
+
+function returnToChapters() {
+  document.getElementById("pdf-page").classList.add("hidden");
+  document.getElementById("chapters-page").classList.remove("hidden");
+}
+
+function goToSubjects() {
+  document.getElementById("chapters-page").classList.add("hidden");
+  document.getElementById("subjects-page").classList.remove("hidden");
+}
+</script>
+
+</body>
+</html>
